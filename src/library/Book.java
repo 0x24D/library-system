@@ -2,12 +2,13 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package library;
 
 /**
+ * A book in the library.
  *
  * @author Kutoma
+ * @author Redacted
  */
 public class Book {
 
@@ -15,19 +16,32 @@ public class Book {
     private Member borrower = null;
     private static int bookCount = 0;
     private int accessionNumber;
+    private String isbnNumber;
+    private String author;
 
-    public Book(String name){
+    public Book(String name) {
         title = name;
         accessionNumber = bookCount++;
-
     }
 
-    void setBorrower(Member theBorrower) {
+    public void setBorrower(Member theBorrower) {
         borrower = theBorrower;
     }
 
-    Member getBorrower() {
+    public Member getBorrower() {
         return borrower;
+    }
+
+    public void setCurrentBorrower(Member member) {
+    }
+
+    @Override
+    public String toString() {
+        return Integer.toString(accessionNumber) + " " + title;
+    }
+
+    public boolean isOnLoan() {
+        return false;
     }
 
 }
