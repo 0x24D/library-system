@@ -20,11 +20,11 @@ public class SetOfMembers extends ArrayList<Member> {
     }
 
     public Member getMemberFromName(String name) {
-        return null;
+        return super.stream().filter(m -> m.getName().equals(name)).findFirst().orElse(null);
     }
 
     public Member getMemberFromNumber(int number) {
-        return null;
+        return super.stream().filter(m -> m.getNumber() == number).findFirst().orElse(null);
     }
 
     public void returnMember(Member member) {

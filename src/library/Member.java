@@ -31,14 +31,24 @@ public class Member {
 
     public void borrowBook(Book aBook) {
         currentLoans.addBook(aBook);
-        aBook.setBorrower(this);
+        aBook.setCurrentBorrower(this);
     }
 
     public void returnBook(Book book) {
+        currentLoans.remove(book);
+        book.setCurrentBorrower(null);
     }
 
     public SetOfBooks getBookOnLoan() {
         return null;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public int getNumber() {
+        return memberNumber;
     }
 
 }

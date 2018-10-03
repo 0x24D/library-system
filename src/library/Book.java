@@ -24,15 +24,12 @@ public class Book {
         accessionNumber = bookCount++;
     }
 
-    public void setBorrower(Member theBorrower) {
+    public void setCurrentBorrower(Member theBorrower) {
         borrower = theBorrower;
     }
 
     public Member getBorrower() {
         return borrower;
-    }
-
-    public void setCurrentBorrower(Member member) {
     }
 
     @Override
