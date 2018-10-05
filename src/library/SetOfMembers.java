@@ -28,6 +28,7 @@ public class SetOfMembers extends ArrayList<Member> {
     }
 
     public void returnMember(Member member) {
+        super.remove(member);
     }
 
 }

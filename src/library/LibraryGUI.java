@@ -61,7 +61,8 @@ public class LibraryGUI extends javax.swing.JFrame {
     }
 
     public void acceptReturn() {
-
+        selectedMember.returnBook(selectedBook);
+        refreshBookList();
     }
 
     public void showCurrentLoans() {
@@ -70,8 +71,13 @@ public class LibraryGUI extends javax.swing.JFrame {
         System.out.println("Currently loaned books: " + loanedBooks);
     }
 
-    public void selectBook() {
-        String value = bookList.getSelectedValue().toString();
+    public void selectBook(boolean loanBook) {
+        String value = null;
+        if (loanBook) {
+            value = bookList.getSelectedValue().toString();
+        } else {
+            value = loanedBookList.getSelectedValue().toString();
+        }
         selectedBook = holdings.findBookFromAccNumber(Integer.valueOf(value.substring(0, value.indexOf(" "))));
 
     }
@@ -217,14 +223,14 @@ public class LibraryGUI extends javax.swing.JFrame {
     private void loanButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loanButtonActionPerformed
         //System.out.println("the button has been pressed - perhaps you should write some code to do something");
         if (selectedMember != null) {
-            selectBook();
+            selectBook(true);
             loanBook();
         }
     }//GEN-LAST:event_loanButtonActionPerformed
 
     private void returnButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_returnButtonActionPerformed
         if (selectedMember != null) {
-            selectBook();
+            selectBook(false);
             acceptReturn();
         }
     }//GEN-LAST:event_returnButtonActionPerformed
