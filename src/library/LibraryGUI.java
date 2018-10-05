@@ -72,7 +72,7 @@ public class LibraryGUI extends javax.swing.JFrame {
     }
 
     public void selectBook(boolean loanBook) {
-        String value = null;
+        String value;
         if (loanBook) {
             value = bookList.getSelectedValue().toString();
         } else {
