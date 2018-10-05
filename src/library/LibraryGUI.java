@@ -10,6 +10,9 @@
  */
 package library;
 
+import java.util.ArrayList;
+import java.util.stream.Collectors;
+
 /**
  * The GUI used to control the library.
  *
@@ -52,23 +55,41 @@ public class LibraryGUI extends javax.swing.JFrame {
     }
 
     public void loanBook() {
-
+        selectedMember.borrowBook(selectedBook);
+        System.out.println("Member: " + selectedMember.getName() + " has borrowed book: " + selectedBook.getAuthor() + " - " + selectedBook.getTitle());
+        refreshBookList();
     }
 
     public void acceptReturn() {
+
     }
 
     public void showCurrentLoans() {
+        SetOfBooks loanedBooks = (SetOfBooks) holdings.stream().filter(b -> b.getBorrower() != null).collect(Collectors.toList());
+        loanedBookList.setListData(loanedBooks.toArray());
+        System.out.println("Currently loaned books: " + loanedBooks);
     }
 
     public void selectBook() {
-        bookList.getSelectedValue();
+        String value = bookList.getSelectedValue().toString();
+        selectedBook = holdings.findBookFromAccNumber(Integer.valueOf(value.substring(0, value.indexOf(" "))));
 
     }
 
     public void selectMember() {
         String value = memberList.getSelectedValue().toString();
         selectedMember = theMembers.getMemberFromNumber(Integer.valueOf(value.substring(0, value.indexOf(" "))));
+        refreshBookList();
+    }
+
+    public void refreshBookList() {
+        SetOfBooks availableBooks = new SetOfBooks(holdings);
+        SetOfBooks loanedBooks = new SetOfBooks(holdings);
+        availableBooks.removeIf(b -> b.isOnLoan());
+        loanedBooks.removeIf(b -> !b.isOnLoan());
+        loanedBooks.removeIf(b -> b.getBorrower() != selectedMember);
+        bookList.setListData(availableBooks.toArray());
+        loanedBookList.setListData(loanedBooks.toArray());
     }
 
     /**
@@ -87,6 +108,9 @@ public class LibraryGUI extends javax.swing.JFrame {
         jScrollPane2 = new javax.swing.JScrollPane();
         bookList = new javax.swing.JList();
         returnButton = new javax.swing.JButton();
+        memberButton = new javax.swing.JButton();
+        jScrollPane3 = new javax.swing.JScrollPane();
+        loanedBookList = new javax.swing.JList();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -129,22 +153,42 @@ public class LibraryGUI extends javax.swing.JFrame {
             }
         });
 
+        memberButton.setText("Select Member");
+        memberButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                memberButtonActionPerformed(evt);
+            }
+        });
+
+        loanedBookList.setModel(new javax.swing.AbstractListModel() {
+            String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
+            public int getSize() { return strings.length; }
+            public Object getElementAt(int i) { return strings[i]; }
+        });
+        jScrollPane3.setViewportView(loanedBookList);
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGap(117, 117, 117)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                    .addComponent(jScrollPane1)
-                    .addComponent(loanButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 108, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(returnButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jScrollPane2))
-                .addGap(79, 79, 79)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 121, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 121, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGap(212, 212, 212))
+            .addGroup(layout.createSequentialGroup()
+                .addGap(101, 101, 101)
+                .addComponent(memberButton)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(loanButton)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(returnButton)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -157,11 +201,13 @@ public class LibraryGUI extends javax.swing.JFrame {
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(43, 43, 43)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(returnButton)
-                            .addComponent(loanButton))
+                            .addComponent(loanButton)
+                            .addComponent(memberButton))
                         .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
         );
 
@@ -170,17 +216,22 @@ public class LibraryGUI extends javax.swing.JFrame {
 
     private void loanButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loanButtonActionPerformed
         //System.out.println("the button has been pressed - perhaps you should write some code to do something");
-        selectMember();
-        selectBook();
-        loanBook();
-
+        if (selectedMember != null) {
+            selectBook();
+            loanBook();
+        }
     }//GEN-LAST:event_loanButtonActionPerformed
 
     private void returnButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_returnButtonActionPerformed
-        selectMember();
-        selectBook();
-        acceptReturn();
+        if (selectedMember != null) {
+            selectBook();
+            acceptReturn();
+        }
     }//GEN-LAST:event_returnButtonActionPerformed
+
+    private void memberButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_memberButtonActionPerformed
+        selectMember();
+    }//GEN-LAST:event_memberButtonActionPerformed
 
     /**
      * @param args the command line arguments
@@ -201,7 +252,10 @@ public class LibraryGUI extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JButton loanButton;
+    private javax.swing.JList loanedBookList;
+    private javax.swing.JButton memberButton;
     private javax.swing.JList memberList;
     private javax.swing.JButton returnButton;
     // End of variables declaration//GEN-END:variables

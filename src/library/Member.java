@@ -35,7 +35,7 @@ public class Member {
     }
 
     public void returnBook(Book book) {
-        currentLoans.remove(book);
+        currentLoans.removeBook(book);
         book.setCurrentBorrower(null);
     }
 

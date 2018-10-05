@@ -16,7 +16,7 @@ public class Book {
     private Member borrower = null;
     private static int bookCount = 0;
     private int accessionNumber;
-    private String isbnNumber;
+    private int isbnNumber;
     private String author;
 
     public Book(String name) {
@@ -38,7 +38,23 @@ public class Book {
     }
 
     public boolean isOnLoan() {
-        return false;
+        return borrower != null;
+    }
+
+    public String getAuthor() {
+        return author;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public int getAccNumber() {
+        return accessionNumber;
+    }
+
+    public int getIsbnNumber() {
+        return isbnNumber;
     }
 
 }
