@@ -72,13 +72,17 @@ public class LibraryGUI extends javax.swing.JFrame {
     }
 
     public void selectBook(boolean loanBook) {
-        String value;
-        if (loanBook) {
-            value = bookList.getSelectedValue().toString();
-        } else {
-            value = loanedBookList.getSelectedValue().toString();
+        if (selectedMember != null) {
+            Object object;
+            String value;
+            if (loanBook) {
+                object = bookList.getSelectedValue();
+            } else {
+                object = loanedBookList.getSelectedValue();
+            }
+            value = object == null ? "" : object.toString();
+            selectedBook = holdings.findBookFromAccNumber(Integer.valueOf(value.substring(0, value.indexOf(" "))));
         }
-        selectedBook = holdings.findBookFromAccNumber(Integer.valueOf(value.substring(0, value.indexOf(" "))));
 
     }
 
