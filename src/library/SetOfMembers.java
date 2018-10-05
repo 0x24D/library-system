@@ -27,7 +27,7 @@ public class SetOfMembers extends ArrayList<Member> {
         return super.stream().filter(m -> m.getNumber() == number).findFirst().orElse(null);
     }
 
-    public void returnMember(Member member) {
+    public void removeMember(Member member) {
         super.remove(member);
     }
 
