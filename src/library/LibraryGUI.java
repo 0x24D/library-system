@@ -10,8 +10,8 @@
  */
 package library;
 
-import java.util.ArrayList;
-import java.util.stream.Collectors;
+import javax.swing.JList;
+import javax.swing.event.ListSelectionEvent;
 
 /**
  * The GUI used to control the library.
@@ -45,54 +45,56 @@ public class LibraryGUI extends javax.swing.JFrame {
 
         Book book1 = new Book("book1");
         Book book2 = new Book("book2");
+        Book book3 = new Book("book3");
+        Book book4 = new Book("book4");
 
         holdings.addBook(book1);
         holdings.addBook(book2);
+        holdings.addBook(book3);
+        holdings.addBook(book4);
 
         memberList.setListData(theMembers.toArray());
         bookList.setListData(holdings.toArray());
+        loanedBookList.setListData(new SetOfBooks().toArray());
+
+        memberList.addListSelectionListener((ListSelectionEvent event) -> {
+            selectMember(event);
+
+            /* Where to put these? */
+            showCurrentLoans();
+            selectedBook = null;
+
+            bookList.setEnabled(true);
+            loanedBookList.setEnabled(true);
+            loanButton.setEnabled(true);
+            returnButton.setEnabled(true);
+        });
+
+        bookList.addListSelectionListener((ListSelectionEvent event) -> {
+            selectBook(event);
+        });
+
+        loanedBookList.addListSelectionListener((ListSelectionEvent event) -> {
+            selectBook(event);
+        });
 
     }
 
     public void loanBook() {
-        selectedMember.borrowBook(selectedBook);
-        System.out.println("Member: " + selectedMember.getName() + " has borrowed book: " + selectedBook.getAuthor() + " - " + selectedBook.getTitle());
-        refreshBookList();
+        if (loanedBookList.getModel().getSize() < 3 && selectedBook != null) {
+            selectedMember.borrowBook(selectedBook);
+            showCurrentLoans();
+        }
     }
 
     public void acceptReturn() {
-        selectedMember.returnBook(selectedBook);
-        refreshBookList();
+        if (selectedBook != null) {
+            selectedMember.returnBook(selectedBook);
+            showCurrentLoans();
+        }
     }
 
     public void showCurrentLoans() {
-        SetOfBooks loanedBooks = (SetOfBooks) holdings.stream().filter(b -> b.getBorrower() != null).collect(Collectors.toList());
-        loanedBookList.setListData(loanedBooks.toArray());
-        System.out.println("Currently loaned books: " + loanedBooks);
-    }
-
-    public void selectBook(boolean loanBook) {
-        if (selectedMember != null) {
-            Object object;
-            String value;
-            if (loanBook) {
-                object = bookList.getSelectedValue();
-            } else {
-                object = loanedBookList.getSelectedValue();
-            }
-            value = object == null ? "" : object.toString();
-            selectedBook = holdings.findBookFromAccNumber(Integer.valueOf(value.substring(0, value.indexOf(" "))));
-        }
-
-    }
-
-    public void selectMember() {
-        String value = memberList.getSelectedValue().toString();
-        selectedMember = theMembers.getMemberFromNumber(Integer.valueOf(value.substring(0, value.indexOf(" "))));
-        refreshBookList();
-    }
-
-    public void refreshBookList() {
         SetOfBooks availableBooks = new SetOfBooks(holdings);
         SetOfBooks loanedBooks = new SetOfBooks(holdings);
         availableBooks.removeIf(b -> b.isOnLoan());
@@ -100,6 +102,31 @@ public class LibraryGUI extends javax.swing.JFrame {
         loanedBooks.removeIf(b -> b.getBorrower() != selectedMember);
         bookList.setListData(availableBooks.toArray());
         loanedBookList.setListData(loanedBooks.toArray());
+    }
+
+    public void selectBook(ListSelectionEvent event) {
+        if (!event.getValueIsAdjusting()) {
+            JList source = (JList) event.getSource();
+            Object obj = source.getSelectedValue();
+            String selected = obj == null ? "" : obj.toString();
+
+            if (!selected.isEmpty()) {
+                selectedBook = holdings.findBookFromAccNumber(Integer.valueOf(selected.substring(0, selected.indexOf(" "))));
+            }
+        }
+
+    }
+
+    public void selectMember(ListSelectionEvent event) {
+        if (!event.getValueIsAdjusting()) {
+            JList source = (JList) event.getSource();
+            Object obj = source.getSelectedValue();
+            String selected = obj == null ? "" : obj.toString();
+
+            if (!selected.isEmpty()) {
+                selectedMember = theMembers.getMemberFromNumber(Integer.valueOf(selected.substring(0, selected.indexOf(" "))));
+            }
+        }
     }
 
     /**
@@ -118,7 +145,6 @@ public class LibraryGUI extends javax.swing.JFrame {
         jScrollPane2 = new javax.swing.JScrollPane();
         bookList = new javax.swing.JList();
         returnButton = new javax.swing.JButton();
-        memberButton = new javax.swing.JButton();
         jScrollPane3 = new javax.swing.JScrollPane();
         loanedBookList = new javax.swing.JList();
 
@@ -136,6 +162,7 @@ public class LibraryGUI extends javax.swing.JFrame {
         );
 
         loanButton.setText("Loan Book");
+        loanButton.setEnabled(false);
         loanButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 loanButtonActionPerformed(evt);
@@ -154,19 +181,14 @@ public class LibraryGUI extends javax.swing.JFrame {
             public int getSize() { return strings.length; }
             public Object getElementAt(int i) { return strings[i]; }
         });
+        bookList.setEnabled(false);
         jScrollPane2.setViewportView(bookList);
 
         returnButton.setText("Return Book");
+        returnButton.setEnabled(false);
         returnButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 returnButtonActionPerformed(evt);
-            }
-        });
-
-        memberButton.setText("Select Member");
-        memberButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                memberButtonActionPerformed(evt);
             }
         });
 
@@ -175,6 +197,7 @@ public class LibraryGUI extends javax.swing.JFrame {
             public int getSize() { return strings.length; }
             public Object getElementAt(int i) { return strings[i]; }
         });
+        loanedBookList.setEnabled(false);
         jScrollPane3.setViewportView(loanedBookList);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -192,9 +215,7 @@ public class LibraryGUI extends javax.swing.JFrame {
                 .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGap(212, 212, 212))
             .addGroup(layout.createSequentialGroup()
-                .addGap(101, 101, 101)
-                .addComponent(memberButton)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGap(246, 246, 246)
                 .addComponent(loanButton)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(returnButton)
@@ -216,8 +237,7 @@ public class LibraryGUI extends javax.swing.JFrame {
                         .addGap(43, 43, 43)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(returnButton)
-                            .addComponent(loanButton)
-                            .addComponent(memberButton))
+                            .addComponent(loanButton))
                         .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
         );
 
@@ -225,35 +245,23 @@ public class LibraryGUI extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void loanButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loanButtonActionPerformed
-        //System.out.println("the button has been pressed - perhaps you should write some code to do something");
-        if (selectedMember != null) {
-            selectBook(true);
+        if (selectedMember != null && selectedBook != null) {
             loanBook();
         }
     }//GEN-LAST:event_loanButtonActionPerformed
 
     private void returnButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_returnButtonActionPerformed
-        if (selectedMember != null) {
-            selectBook(false);
+        if (selectedMember != null && selectedBook != null) {
             acceptReturn();
         }
     }//GEN-LAST:event_returnButtonActionPerformed
-
-    private void memberButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_memberButtonActionPerformed
-        selectMember();
-    }//GEN-LAST:event_memberButtonActionPerformed
 
     /**
      * @param args the command line arguments
      */
     public static void main(String args[]) {
-        java.awt.EventQueue.invokeLater(new Runnable() {
-
-            @Override
-            public void run() {
-                new LibraryGUI().setVisible(true);
-            }
-
+        java.awt.EventQueue.invokeLater(() -> {
+            new LibraryGUI().setVisible(true);
         });
     }
 
@@ -265,7 +273,6 @@ public class LibraryGUI extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JButton loanButton;
     private javax.swing.JList loanedBookList;
-    private javax.swing.JButton memberButton;
     private javax.swing.JList memberList;
     private javax.swing.JButton returnButton;
     // End of variables declaration//GEN-END:variables
