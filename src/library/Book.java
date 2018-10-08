@@ -12,10 +12,10 @@ package library;
  */
 public class Book {
 
-    private String title;
+    private final String title;
     private Member borrower = null;
     private static int bookCount = 0;
-    private int accessionNumber;
+    private final int accessionNumber;
     private int isbnNumber;
     private String author;
 

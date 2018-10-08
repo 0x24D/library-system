@@ -12,8 +12,8 @@ package library;
  */
 public class Member {
 
-    private String name;
-    private int memberNumber;
+    private final String name;
+    private final int memberNumber;
     private SetOfBooks currentLoans = new SetOfBooks();
     private static int memberCount = 0;
 

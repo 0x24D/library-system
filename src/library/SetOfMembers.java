@@ -16,7 +16,6 @@ public class SetOfMembers extends ArrayList<Member> {
 
     public void addMember(Member aMember) {
         super.add(aMember);
-
     }
 
     public Member getMemberFromName(String name) {
