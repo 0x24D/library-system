@@ -61,13 +61,15 @@ public class LibraryGUI extends javax.swing.JFrame {
             selectMember(event);
 
             /* Where to put these? */
-            showCurrentLoans();
-            selectedBook = null;
+            if (selectedMember != null) {
+                showCurrentLoans();
+                selectedBook = null;
 
-            bookList.setEnabled(true);
-            loanedBookList.setEnabled(true);
-            loanButton.setEnabled(true);
-            returnButton.setEnabled(true);
+                bookList.setEnabled(true);
+                loanedBookList.setEnabled(true);
+                loanButton.setEnabled(true);
+                returnButton.setEnabled(true);
+            }
         });
 
         bookList.addListSelectionListener((ListSelectionEvent event) -> {
@@ -96,12 +98,9 @@ public class LibraryGUI extends javax.swing.JFrame {
 
     public void showCurrentLoans() {
         SetOfBooks availableBooks = new SetOfBooks(holdings);
-        SetOfBooks loanedBooks = new SetOfBooks(holdings);
         availableBooks.removeIf(b -> b.isOnLoan());
-        loanedBooks.removeIf(b -> !b.isOnLoan());
-        loanedBooks.removeIf(b -> b.getBorrower() != selectedMember);
         bookList.setListData(availableBooks.toArray());
-        loanedBookList.setListData(loanedBooks.toArray());
+        loanedBookList.setListData(selectedMember.getBooksOnLoan().toArray());
     }
 
     public void selectBook(ListSelectionEvent event) {

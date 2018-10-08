@@ -39,8 +39,8 @@ public class Member {
         book.setCurrentBorrower(null);
     }
 
-    public SetOfBooks getBookOnLoan() {
-        return null;
+    public SetOfBooks getBooksOnLoan() {
+        return currentLoans;
     }
 
     public String getName() {
