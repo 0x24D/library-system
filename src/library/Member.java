@@ -20,7 +20,6 @@ public class Member {
     public Member(String aName) {
         name = aName;
         memberNumber = memberCount++;
-        currentLoans = new SetOfBooks();
     }
 
     @Override

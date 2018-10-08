@@ -19,7 +19,7 @@ public class SetOfBooks extends ArrayList<Book> {
         super();
     }
 
-    SetOfBooks(SetOfBooks holdings) {
+    public SetOfBooks(SetOfBooks holdings) {
         super(holdings);
     }
 
