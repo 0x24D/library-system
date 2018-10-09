@@ -86,6 +86,7 @@ public class LibraryGUI extends javax.swing.JFrame {
         if (loanedBookList.getModel().getSize() < 3 && selectedBook != null) {
             selectedMember.borrowBook(selectedBook);
             showCurrentLoans();
+            selectedBook = null;
         }
     }
 
