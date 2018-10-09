@@ -94,6 +94,7 @@ public class LibraryGUI extends javax.swing.JFrame {
         if (selectedBook != null) {
             selectedMember.returnBook(selectedBook);
             showCurrentLoans();
+            selectedBook = null;
         }
     }
 
