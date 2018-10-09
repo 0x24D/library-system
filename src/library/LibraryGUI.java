@@ -289,7 +289,18 @@ public class LibraryGUI extends javax.swing.JFrame {
     }//GEN-LAST:event_returnButtonActionPerformed
 
     private void addNewBookActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addNewBookActionPerformed
-        // TODO add your handling code here:
+        String bookTitle = (String) JOptionPane.showInputDialog(
+                libraryGui,
+                "What is the new book's title?",
+                "Add New Book",
+                JOptionPane.QUESTION_MESSAGE,
+                null,
+                null, null);
+        if ((bookTitle != null) && (bookTitle.length() > 0)) {
+            Book newBook = new Book(bookTitle);
+            holdings.addBook(newBook);
+            bookList.setListData(holdings.toArray());
+        }
     }//GEN-LAST:event_addNewBookActionPerformed
 
     private void addNewMemberActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addNewMemberActionPerformed
