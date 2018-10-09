@@ -295,9 +295,9 @@ public class LibraryGUI extends javax.swing.JFrame {
     private void addNewMemberActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addNewMemberActionPerformed
         String memberName = (String) JOptionPane.showInputDialog(
                 libraryGui,
-                "Please enter the new member's name:",
+                "What is the new member's name?",
                 "Add New Member",
-                JOptionPane.PLAIN_MESSAGE,
+                JOptionPane.QUESTION_MESSAGE,
                 null,
                 null, null);
         if ((memberName != null) && (memberName.length() > 0)) {
