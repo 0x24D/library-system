@@ -1,5 +1,4 @@
-
-# Created by https://www.gitignore.io/api/java,netbeans
+ Created by https://www.gitignore.io/api/java,netbeans
 
 ### Java ###
 # Compiled class file
@@ -36,3 +35,5 @@ nbdist/
 
 
 # End of https://www.gitignore.io/api/java,netbeans
+
+library_system.ser*
