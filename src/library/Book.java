@@ -4,14 +4,17 @@
  */
 package library;
 
+import java.io.Serializable;
+
 /**
  * A book in the library.
  *
  * @author Kutoma
  * @author Redacted
  */
-public class Book {
+public class Book implements Serializable {
 
+    private static final long serialVersionUID = 1L;
     private final String title;
     private Member borrower = null;
     private static int bookCount = 0;

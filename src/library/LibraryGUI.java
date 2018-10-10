@@ -10,6 +10,15 @@
  */
 package library;
 
+import java.io.EOFException;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.event.ListSelectionEvent;
@@ -23,41 +32,59 @@ import javax.swing.event.ListSelectionEvent;
 public class LibraryGUI extends javax.swing.JFrame {
 
     private static LibraryGUI libraryGui;
-    private SetOfMembers theMembers = new SetOfMembers();
-    private SetOfBooks holdings = new SetOfBooks();
+    private final SetOfMembers theMembers = new SetOfMembers();
+    private final SetOfBooks holdings = new SetOfBooks();
     private Book selectedBook;
     private Member selectedMember;
 
     /**
-     * Creates new form LibraryGUI
+     * The name of the file that is used for storing the contents of the library
+     * system.
+     */
+    public final static String LIBRARY_FILE = "library_system.ser";
+
+    /**
+     * Creates new form LibraryGUI.
      */
     public LibraryGUI() {
 
         initComponents();
 
-        Member member1 = new Member("Jane");
-        Member member2 = new Member("Amir");
-        Member member3 = new Member("Astrid");
-        Member member4 = new Member("Andy");
+        try {
+            loadLibrarySystem();
+        } catch (IOException ex) {
+            // noop
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(LibraryGUI.class.getName()).log(Level.SEVERE, null, ex);
+        }
 
-        theMembers.addMember(member1);
-        theMembers.addMember(member2);
-        theMembers.addMember(member3);
-        theMembers.addMember(member4);
-
-        Book book1 = new Book("book1");
-        Book book2 = new Book("book2");
-        Book book3 = new Book("book3");
-        Book book4 = new Book("book4");
-
-        holdings.addBook(book1);
-        holdings.addBook(book2);
-        holdings.addBook(book3);
-        holdings.addBook(book4);
-
+//        Member member1 = new Member("Jane");
+//        Member member2 = new Member("Amir");
+//        Member member3 = new Member("Astrid");
+//        Member member4 = new Member("Andy");
+//
+//        theMembers.addMember(member1);
+//        theMembers.addMember(member2);
+//        theMembers.addMember(member3);
+//        theMembers.addMember(member4);
+//
+//        Book book1 = new Book("book1");
+//        Book book2 = new Book("book2");
+//        Book book3 = new Book("book3");
+//        Book book4 = new Book("book4");
+//
+//        holdings.addBook(book1);
+//        holdings.addBook(book2);
+//        holdings.addBook(book3);
+//        holdings.addBook(book4);
         memberList.setListData(theMembers.toArray());
+
+        holdings.removeIf(b -> b.isOnLoan());
         bookList.setListData(holdings.toArray());
-        loanedBookList.setListData(new SetOfBooks().toArray());
+
+        SetOfBooks loanedBooks = new SetOfBooks(holdings);
+        loanedBooks.removeIf(b -> !b.isOnLoan());
+        loanedBookList.setListData(loanedBooks.toArray());
 
         memberList.addListSelectionListener((ListSelectionEvent event) -> {
             selectMember(event);
@@ -129,6 +156,76 @@ public class LibraryGUI extends javax.swing.JFrame {
             if (!selected.isEmpty()) {
                 selectedMember = theMembers.getMemberFromNumber(Integer.valueOf(selected.substring(0, selected.indexOf(" "))));
             }
+        }
+    }
+
+    private void loadLibrarySystem() throws FileNotFoundException, IOException, ClassNotFoundException {
+        ObjectInputStream objectIn = null;
+        try (FileInputStream fileIn = new FileInputStream(LIBRARY_FILE)) {
+            objectIn = new ObjectInputStream(fileIn);
+            Object o = null;
+            try {
+                while (true) {
+                    o = objectIn.readObject();
+
+                    if (o instanceof Book) {
+                        holdings.addBook((Book) o);
+                    } else if (o instanceof Member) {
+                        theMembers.addMember((Member) o);
+                    } else {
+                        String className = o == null ? null : o.getClass().getCanonicalName();
+                        throw new UnsupportedOperationException("Cannot deserialize class " + className);
+                    }
+                }
+            } catch (EOFException e) {
+                return;
+            }
+        } finally {
+            if (objectIn != null) {
+                objectIn.close();
+            }
+        }
+
+    }
+
+    public void saveLibrarySystem() throws FileNotFoundException,
+            IOException {
+        ObjectOutputStream objectOut
+                = null;
+
+        try (FileOutputStream fileOut
+                = new FileOutputStream(LIBRARY_FILE
+                )) {
+            objectOut
+                    = new ObjectOutputStream(fileOut
+                    );
+
+            for (Member m
+                    : theMembers) {
+                objectOut
+                        .writeObject(m
+                        );
+                objectOut
+                        .flush();
+
+            }
+            for (Book b
+                    : holdings) {
+                objectOut
+                        .writeObject(b
+                        );
+                objectOut
+                        .flush();
+
+            }
+        } finally {
+            if (objectOut
+                    != null) {
+                objectOut
+                        .close();
+
+            }
+
         }
     }
 
@@ -277,44 +374,74 @@ public class LibraryGUI extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void loanButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loanButtonActionPerformed
-        if (selectedMember != null && selectedBook != null) {
+        if (selectedMember
+                != null && selectedBook
+                != null) {
             loanBook();
+
         }
     }//GEN-LAST:event_loanButtonActionPerformed
 
     private void returnButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_returnButtonActionPerformed
-        if (selectedMember != null && selectedBook != null) {
+        if (selectedMember
+                != null && selectedBook
+                != null) {
             acceptReturn();
+
         }
     }//GEN-LAST:event_returnButtonActionPerformed
 
     private void addNewBookActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addNewBookActionPerformed
-        String bookTitle = (String) JOptionPane.showInputDialog(
-                libraryGui,
-                "What is the new book's title?",
-                "Add New Book",
-                JOptionPane.QUESTION_MESSAGE,
-                null,
-                null, null);
-        if ((bookTitle != null) && (bookTitle.length() > 0)) {
-            Book newBook = new Book(bookTitle);
-            holdings.addBook(newBook);
-            bookList.setListData(holdings.toArray());
+        String bookTitle
+                = (String) JOptionPane
+                        .showInputDialog(
+                                libraryGui,
+                                "What is the new book's title?",
+                                "Add New Book",
+                                JOptionPane.QUESTION_MESSAGE,
+                                null,
+                                null, null);
+
+        if ((bookTitle
+                != null) && (bookTitle
+                        .length() > 0)) {
+            Book newBook
+                    = new Book(bookTitle
+                    );
+            holdings
+                    .addBook(newBook
+                    );
+            bookList
+                    .setListData(holdings
+                            .toArray());
+
         }
     }//GEN-LAST:event_addNewBookActionPerformed
 
     private void addNewMemberActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addNewMemberActionPerformed
-        String memberName = (String) JOptionPane.showInputDialog(
-                libraryGui,
-                "What is the new member's name?",
-                "Add New Member",
-                JOptionPane.QUESTION_MESSAGE,
-                null,
-                null, null);
-        if ((memberName != null) && (memberName.length() > 0)) {
-            Member newMember = new Member(memberName);
-            theMembers.addMember(newMember);
-            memberList.setListData(theMembers.toArray());
+        String memberName
+                = (String) JOptionPane
+                        .showInputDialog(
+                                libraryGui,
+                                "What is the new member's name?",
+                                "Add New Member",
+                                JOptionPane.QUESTION_MESSAGE,
+                                null,
+                                null, null);
+
+        if ((memberName
+                != null) && (memberName
+                        .length() > 0)) {
+            Member newMember
+                    = new Member(memberName
+                    );
+            theMembers
+                    .addMember(newMember
+                    );
+            memberList
+                    .setListData(theMembers
+                            .toArray());
+
         }
     }//GEN-LAST:event_addNewMemberActionPerformed
 
@@ -322,10 +449,25 @@ public class LibraryGUI extends javax.swing.JFrame {
      * @param args the command line arguments
      */
     public static void main(String args[]) {
-        java.awt.EventQueue.invokeLater(() -> {
-            libraryGui = new LibraryGUI();
-            libraryGui.setVisible(true);
-        });
+        java.awt.EventQueue
+                .invokeLater(() -> {
+                    libraryGui
+                            = new LibraryGUI();
+                    libraryGui
+                            .setVisible(true);
+                    Runtime
+                            .getRuntime().addShutdownHook(new Thread(() -> {
+                                try {
+                                    libraryGui
+                                            .saveLibrarySystem();
+
+                                } catch (IOException ex) {
+                                    // noop for now
+                                }
+                            }));
+
+                });
+
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

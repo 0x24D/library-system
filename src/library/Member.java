@@ -4,17 +4,20 @@
  */
 package library;
 
+import java.io.Serializable;
+
 /**
  * A member of the library.
  *
  * @author Kutoma
  * @author Redacted
  */
-public class Member {
+public class Member implements Serializable {
 
+    private static final long serialVersionUID = 1L;
     private final String name;
     private final int memberNumber;
-    private SetOfBooks currentLoans = new SetOfBooks();
+    private final SetOfBooks currentLoans = new SetOfBooks();
     private static int memberCount = 0;
 
     public Member(String aName) {
