@@ -168,7 +168,9 @@ public class LibraryGUI extends javax.swing.JFrame {
                     if (o instanceof Book) {
                         holdings.addBook((Book) o);
                     } else if (o instanceof Member) {
-                        theMembers.addMember((Member) o);
+                        Member newMember = (Member) o;
+                        theMembers.addMember(newMember);
+                        newMember.setMemberCount(theMembers.size());
                     } else {
                         String className = o == null ? null : o.getClass().getCanonicalName();
                         throw new UnsupportedOperationException("Cannot deserialize class " + className);

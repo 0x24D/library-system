@@ -53,4 +53,8 @@ public class Member implements Serializable {
         return memberNumber;
     }
 
+    public void setMemberCount(int memberCount) {
+        this.memberCount = memberCount;
+    }
+
 }
