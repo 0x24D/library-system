@@ -19,11 +19,13 @@ public class Book implements Serializable {
     private Member borrower = null;
     private static int bookCount = 0;
     private final int accessionNumber;
-    private int isbnNumber;
-    private String author;
+    private final long isbnNumber;
+    private final String author;
 
-    public Book(String name) {
+    public Book(String name, String author, long isbnNumber) {
         title = name;
+        this.author = author;
+        this.isbnNumber = isbnNumber;
         accessionNumber = bookCount++;
     }
 
@@ -37,7 +39,7 @@ public class Book implements Serializable {
 
     @Override
     public String toString() {
-        return Integer.toString(accessionNumber) + " " + title;
+        return String.valueOf(accessionNumber) + " " + title + " - " + author + " (" + isbnNumber + ")";
     }
 
     public boolean isOnLoan() {
@@ -56,12 +58,12 @@ public class Book implements Serializable {
         return accessionNumber;
     }
 
-    public int getIsbnNumber() {
+    public long getIsbnNumber() {
         return isbnNumber;
     }
 
     public void setBookCount(int bookCount) {
-        this.bookCount = bookCount;
+        Book.bookCount = bookCount;
     }
 
 }

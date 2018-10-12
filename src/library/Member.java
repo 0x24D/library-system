@@ -54,7 +54,7 @@ public class Member implements Serializable {
     }
 
     public void setMemberCount(int memberCount) {
-        this.memberCount = memberCount;
+        Member.memberCount = memberCount;
     }
 
 }

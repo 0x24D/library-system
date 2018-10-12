@@ -21,6 +21,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JList;
 import javax.swing.JOptionPane;
+import javax.swing.JTextField;
 import javax.swing.event.ListSelectionEvent;
 
 /**
@@ -346,15 +347,21 @@ public class LibraryGUI extends javax.swing.JFrame {
     }//GEN-LAST:event_returnButtonActionPerformed
 
     private void addNewBookActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addNewBookActionPerformed
-        String bookTitle = (String) JOptionPane.showInputDialog(
-                libraryGui, "What is the new book's title?", "Add New Book",
-                JOptionPane.QUESTION_MESSAGE, null, null, null);
+        JTextField titleField = new JTextField();
+        JTextField authorField = new JTextField();
+        JTextField isbnNumberField = new JTextField();
+        Object[] dialogContents = {"Title:", titleField, "Author:", authorField, "ISBN:", isbnNumberField};
+        int selectedOption = JOptionPane.showConfirmDialog(libraryGui, dialogContents, "Add New Book", JOptionPane.OK_CANCEL_OPTION);
 
-        if ((bookTitle != null) && (bookTitle.length() > 0)) {
-            Book newBook = new Book(bookTitle);
-            holdings.addBook(newBook);
-            bookList.setListData(holdings.toArray());
-
+        if (selectedOption == JOptionPane.OK_OPTION) {
+            String title = titleField.getText();
+            String author = authorField.getText();
+            String isbnNumber = isbnNumberField.getText();
+            if (title != null && author != null && isbnNumber != null) {
+                Book newBook = new Book(title.trim(), author.trim(), Long.valueOf(isbnNumber.trim()));
+                holdings.addBook(newBook);
+                bookList.setListData(holdings.toArray());
+            }
         }
     }//GEN-LAST:event_addNewBookActionPerformed
 
