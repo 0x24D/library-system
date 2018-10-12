@@ -60,4 +60,8 @@ public class Book implements Serializable {
         return isbnNumber;
     }
 
+    public void setBookCount(int bookCount) {
+        this.bookCount = bookCount;
+    }
+
 }

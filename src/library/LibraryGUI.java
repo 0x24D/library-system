@@ -166,7 +166,9 @@ public class LibraryGUI extends javax.swing.JFrame {
                 while (true) {
                     o = objectIn.readObject();
                     if (o instanceof Book) {
-                        holdings.addBook((Book) o);
+                        Book newBook = (Book) o;
+                        holdings.addBook(newBook);
+                        newBook.setBookCount(holdings.size());
                     } else if (o instanceof Member) {
                         Member newMember = (Member) o;
                         theMembers.addMember(newMember);
@@ -177,7 +179,7 @@ public class LibraryGUI extends javax.swing.JFrame {
                     }
                 }
             } catch (EOFException e) {
-                return;
+                // noop
             }
         } finally {
             if (objectIn != null) {
