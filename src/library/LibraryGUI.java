@@ -139,7 +139,6 @@ public class LibraryGUI extends javax.swing.JFrame {
             JList source = (JList) event.getSource();
             Object obj = source.getSelectedValue();
             String selected = obj == null ? "" : obj.toString();
-
             if (!selected.isEmpty()) {
                 selectedBook = holdings.findBookFromAccNumber(Integer.valueOf(selected.substring(0, selected.indexOf(" "))));
             }
@@ -152,7 +151,6 @@ public class LibraryGUI extends javax.swing.JFrame {
             JList source = (JList) event.getSource();
             Object obj = source.getSelectedValue();
             String selected = obj == null ? "" : obj.toString();
-
             if (!selected.isEmpty()) {
                 selectedMember = theMembers.getMemberFromNumber(Integer.valueOf(selected.substring(0, selected.indexOf(" "))));
             }
@@ -163,11 +161,10 @@ public class LibraryGUI extends javax.swing.JFrame {
         ObjectInputStream objectIn = null;
         try (FileInputStream fileIn = new FileInputStream(LIBRARY_FILE)) {
             objectIn = new ObjectInputStream(fileIn);
-            Object o = null;
+            Object o;
             try {
                 while (true) {
                     o = objectIn.readObject();
-
                     if (o instanceof Book) {
                         holdings.addBook((Book) o);
                     } else if (o instanceof Member) {
@@ -190,26 +187,20 @@ public class LibraryGUI extends javax.swing.JFrame {
 
     public void saveLibrarySystem() throws FileNotFoundException, IOException {
         ObjectOutputStream objectOut = null;
-
         try (FileOutputStream fileOut = new FileOutputStream(LIBRARY_FILE)) {
             objectOut = new ObjectOutputStream(fileOut);
-
             for (Member m : theMembers) {
                 objectOut.writeObject(m);
                 objectOut.flush();
-
             }
             for (Book b : holdings) {
                 objectOut.writeObject(b);
                 objectOut.flush();
-
             }
         } finally {
             if (objectOut != null) {
                 objectOut.close();
-
             }
-
         }
     }
 
