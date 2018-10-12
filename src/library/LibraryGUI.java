@@ -58,33 +58,8 @@ public class LibraryGUI extends javax.swing.JFrame {
             Logger.getLogger(LibraryGUI.class.getName()).log(Level.SEVERE, null, ex);
         }
 
-//        Member member1 = new Member("Jane");
-//        Member member2 = new Member("Amir");
-//        Member member3 = new Member("Astrid");
-//        Member member4 = new Member("Andy");
-//
-//        theMembers.addMember(member1);
-//        theMembers.addMember(member2);
-//        theMembers.addMember(member3);
-//        theMembers.addMember(member4);
-//
-//        Book book1 = new Book("book1");
-//        Book book2 = new Book("book2");
-//        Book book3 = new Book("book3");
-//        Book book4 = new Book("book4");
-//
-//        holdings.addBook(book1);
-//        holdings.addBook(book2);
-//        holdings.addBook(book3);
-//        holdings.addBook(book4);
         memberList.setListData(theMembers.toArray());
-
-        holdings.removeIf(b -> b.isOnLoan());
-        bookList.setListData(holdings.toArray());
-
-        SetOfBooks loanedBooks = new SetOfBooks(holdings);
-        loanedBooks.removeIf(b -> !b.isOnLoan());
-        loanedBookList.setListData(loanedBooks.toArray());
+        showCurrentLoans();
 
         memberList.addListSelectionListener((ListSelectionEvent event) -> {
             selectMember(event);
@@ -127,11 +102,15 @@ public class LibraryGUI extends javax.swing.JFrame {
         }
     }
 
-    public void showCurrentLoans() {
+    private void showCurrentLoans() {
         SetOfBooks availableBooks = new SetOfBooks(holdings);
         availableBooks.removeIf(b -> b.isOnLoan());
         bookList.setListData(availableBooks.toArray());
-        loanedBookList.setListData(selectedMember.getBooksOnLoan().toArray());
+        if (selectedMember == null) {
+            loanedBookList.setListData(new SetOfBooks().toArray());
+        } else {
+            loanedBookList.setListData(selectedMember.getBooksOnLoan().toArray());
+        }
     }
 
     public void selectBook(ListSelectionEvent event) {
@@ -402,7 +381,6 @@ public class LibraryGUI extends javax.swing.JFrame {
             Runtime.getRuntime().addShutdownHook(new Thread(() -> {
                 try {
                     libraryGui.saveLibrarySystem();
-
                 } catch (IOException ex) {
                     // noop for now
                 }
