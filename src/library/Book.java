@@ -39,7 +39,7 @@ public class Book implements Serializable {
 
     @Override
     public String toString() {
-        return String.valueOf(accessionNumber) + " " + title + " - " + author + " (" + isbnNumber + ")";
+        return "(" + String.valueOf(accessionNumber) + ") " + title + " - " + author + " [" + isbnNumber + "]";
     }
 
     public boolean isOnLoan() {

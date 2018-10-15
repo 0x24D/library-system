@@ -120,7 +120,7 @@ public class LibraryGUI extends javax.swing.JFrame {
             Object obj = source.getSelectedValue();
             String selected = obj == null ? "" : obj.toString();
             if (!selected.isEmpty()) {
-                selectedBook = holdings.findBookFromAccNumber(Integer.valueOf(selected.substring(0, selected.indexOf(" "))));
+                selectedBook = holdings.findBookFromAccNumber(Integer.valueOf(selected.substring(1, selected.indexOf(")"))));
             }
         }
 
@@ -132,7 +132,7 @@ public class LibraryGUI extends javax.swing.JFrame {
             Object obj = source.getSelectedValue();
             String selected = obj == null ? "" : obj.toString();
             if (!selected.isEmpty()) {
-                selectedMember = theMembers.getMemberFromNumber(Integer.valueOf(selected.substring(0, selected.indexOf(" "))));
+                selectedMember = theMembers.getMemberFromNumber(Integer.valueOf(selected.substring(1, selected.indexOf(")"))));
             }
         }
     }
@@ -371,7 +371,7 @@ public class LibraryGUI extends javax.swing.JFrame {
                 JOptionPane.QUESTION_MESSAGE, null, null, null);
 
         if ((memberName != null) && (memberName.length() > 0)) {
-            Member newMember = new Member(memberName);
+            Member newMember = new Member(memberName.trim());
             theMembers.addMember(newMember);
             memberList.setListData(theMembers.toArray());
 

@@ -27,7 +27,7 @@ public class Member implements Serializable {
 
     @Override
     public String toString() {
-        return Integer.toString(memberNumber) + " " + name;
+        return "(" + Integer.toString(memberNumber) + ") " + name;
 
     }
 
