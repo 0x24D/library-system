@@ -357,7 +357,7 @@ public class LibraryGUI extends javax.swing.JFrame {
             String title = titleField.getText();
             String author = authorField.getText();
             String isbnNumber = isbnNumberField.getText();
-            if (title != null && author != null && isbnNumber != null) {
+            if (!title.isEmpty() && !author.isEmpty() && !isbnNumber.isEmpty()) {
                 Book newBook = new Book(title.trim(), author.trim(), Long.valueOf(isbnNumber.trim()));
                 holdings.addBook(newBook);
                 bookList.setListData(holdings.toArray());
@@ -370,7 +370,7 @@ public class LibraryGUI extends javax.swing.JFrame {
                 libraryGui, "What is the new member's name?", "Add New Member",
                 JOptionPane.QUESTION_MESSAGE, null, null, null);
 
-        if ((memberName != null) && (memberName.length() > 0)) {
+        if (!memberName.isEmpty()) {
             Member newMember = new Member(memberName.trim());
             theMembers.addMember(newMember);
             memberList.setListData(theMembers.toArray());
