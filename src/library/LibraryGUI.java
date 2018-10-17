@@ -342,7 +342,6 @@ public class LibraryGUI extends javax.swing.JFrame {
     private void returnButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_returnButtonActionPerformed
         if (selectedMember != null && selectedBook != null) {
             acceptReturn();
-
         }
     }//GEN-LAST:event_returnButtonActionPerformed
 
@@ -351,31 +350,45 @@ public class LibraryGUI extends javax.swing.JFrame {
         JTextField authorField = new JTextField();
         JTextField isbnNumberField = new JTextField();
         Object[] dialogContents = {"Title:", titleField, "Author:", authorField, "ISBN:", isbnNumberField};
-        int selectedOption = JOptionPane.showConfirmDialog(libraryGui, dialogContents, "Add New Book", JOptionPane.OK_CANCEL_OPTION);
+        String title = "";
+        String author = "";
+        String isbnNumber = "";
+        int selectedOption;
+        do {
+            selectedOption = JOptionPane.showConfirmDialog(libraryGui, dialogContents, "Add New Book", JOptionPane.OK_CANCEL_OPTION);
+            if (selectedOption == JOptionPane.OK_OPTION) {
+                title = titleField.getText();
+                author = authorField.getText();
+                isbnNumber = isbnNumberField.getText();
+            } else {
+                break;
+            }
+        } while (title.isEmpty() && author.isEmpty() && isbnNumber.isEmpty() || isbnNumber.matches("[a-zA-Z]+"));
 
         if (selectedOption == JOptionPane.OK_OPTION) {
-            String title = titleField.getText();
-            String author = authorField.getText();
-            String isbnNumber = isbnNumberField.getText();
-            if (!title.isEmpty() && !author.isEmpty() && !isbnNumber.isEmpty()) {
-                Book newBook = new Book(title.trim(), author.trim(), Long.valueOf(isbnNumber.trim()));
-                holdings.addBook(newBook);
-                bookList.setListData(holdings.toArray());
-            }
+            isbnNumber = isbnNumber.replace("-", "");
+            Book newBook = new Book(title.trim(), author.trim(), Long.valueOf(isbnNumber.trim()));
+            holdings.addBook(newBook);
+            bookList.setListData(holdings.toArray());
         }
     }//GEN-LAST:event_addNewBookActionPerformed
 
     private void addNewMemberActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addNewMemberActionPerformed
-        String memberName = (String) JOptionPane.showInputDialog(
-                libraryGui, "What is the new member's name?", "Add New Member",
-                JOptionPane.QUESTION_MESSAGE, null, null, null);
-
-        if (!memberName.isEmpty()) {
+        String memberName = "";
+        do {
+            memberName = (String) JOptionPane.showInputDialog(
+                    libraryGui, "What is the new member's name?", "Add New Member",
+                    JOptionPane.QUESTION_MESSAGE, null, null, null);
+            if (memberName == null) {
+                break;
+            }
+        } while (memberName.isEmpty());
+        if (memberName != null) {
             Member newMember = new Member(memberName.trim());
             theMembers.addMember(newMember);
             memberList.setListData(theMembers.toArray());
-
         }
+
     }//GEN-LAST:event_addNewMemberActionPerformed
 
     /**
