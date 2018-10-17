@@ -17,8 +17,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
@@ -54,9 +52,7 @@ public class LibraryGUI extends javax.swing.JFrame {
         try {
             loadLibrarySystem();
         } catch (IOException ex) {
-            // noop
-        } catch (ClassNotFoundException ex) {
-            Logger.getLogger(LibraryGUI.class.getName()).log(Level.SEVERE, null, ex);
+            throw new RuntimeException("Cannot load library system as there was an issue when accessing the serialized data file.", ex);
         }
 
         memberList.setListData(theMembers.toArray());
@@ -137,7 +133,7 @@ public class LibraryGUI extends javax.swing.JFrame {
         }
     }
 
-    private void loadLibrarySystem() throws FileNotFoundException, IOException, ClassNotFoundException {
+    private void loadLibrarySystem() throws IOException {
         ObjectInputStream objectIn = null;
         try (FileInputStream fileIn = new FileInputStream(LIBRARY_FILE)) {
             objectIn = new ObjectInputStream(fileIn);
@@ -158,8 +154,10 @@ public class LibraryGUI extends javax.swing.JFrame {
                         throw new UnsupportedOperationException("Cannot deserialize class " + className);
                     }
                 }
-            } catch (EOFException e) {
+            } catch (EOFException ex) {
                 // noop
+            } catch (ClassNotFoundException ex) {
+                throw new RuntimeException("Cannot load library system as serialized data is not the same version as the current program version.", ex);
             }
         } finally {
             if (objectIn != null) {
@@ -169,7 +167,7 @@ public class LibraryGUI extends javax.swing.JFrame {
 
     }
 
-    public void saveLibrarySystem() throws FileNotFoundException, IOException {
+    public void saveLibrarySystem() throws IOException {
         ObjectOutputStream objectOut = null;
         try (FileOutputStream fileOut = new FileOutputStream(LIBRARY_FILE)) {
             objectOut = new ObjectOutputStream(fileOut);
@@ -402,7 +400,7 @@ public class LibraryGUI extends javax.swing.JFrame {
                 try {
                     libraryGui.saveLibrarySystem();
                 } catch (IOException ex) {
-                    // noop for now
+                    // noop
                 }
             }));
 
