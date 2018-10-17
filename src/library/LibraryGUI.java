@@ -354,9 +354,6 @@ public class LibraryGUI extends javax.swing.JFrame {
         String isbnNumber = "";
         int selectedOption;
         do {
-            if (isbnNumber.chars().anyMatch(Character::isLetter)) {
-                JOptionPane.showMessageDialog(libraryGui, "ISBN number can only contain numbers (0-9) and dashes (-)");
-            }
             selectedOption = JOptionPane.showConfirmDialog(libraryGui, dialogContents, "Add New Book", JOptionPane.OK_CANCEL_OPTION);
             if (selectedOption == JOptionPane.OK_OPTION) {
                 title = titleField.getText();
@@ -364,6 +361,15 @@ public class LibraryGUI extends javax.swing.JFrame {
                 isbnNumber = isbnNumberField.getText().replace("-", "");
             } else {
                 break;
+            }
+            if (title.isEmpty()) {
+                JOptionPane.showMessageDialog(libraryGui, "Book title cannot be empty");
+            }
+            if (author.isEmpty()) {
+                JOptionPane.showMessageDialog(libraryGui, "Book author cannot be empty");
+            }
+            if (isbnNumber.isEmpty() || isbnNumber.chars().anyMatch(Character::isLetter)) {
+                JOptionPane.showMessageDialog(libraryGui, "ISBN number cannot be empty and can only contain numbers (0-9) and dashes (-)");
             }
         } while (title.isEmpty() || author.isEmpty() || isbnNumber.isEmpty() || isbnNumber.chars().anyMatch(Character::isLetter));
 
@@ -380,8 +386,11 @@ public class LibraryGUI extends javax.swing.JFrame {
             memberName = (String) JOptionPane.showInputDialog(
                     libraryGui, "Name:", "Add New Member",
                     JOptionPane.QUESTION_MESSAGE, null, null, null);
-            if (memberName == null) {
+            if (memberName == null) { // user has clicked cancel
                 break;
+            }
+            if (memberName.isEmpty()) {
+                JOptionPane.showMessageDialog(libraryGui, "Member name cannot be empty");
             }
         } while (memberName.isEmpty());
         if (memberName != null) {
