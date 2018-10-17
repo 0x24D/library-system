@@ -17,6 +17,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.util.regex.Matcher;
 import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
@@ -353,18 +354,20 @@ public class LibraryGUI extends javax.swing.JFrame {
         String isbnNumber = "";
         int selectedOption;
         do {
+            if (isbnNumber.chars().anyMatch(Character::isLetter)) {
+                JOptionPane.showMessageDialog(libraryGui, "ISBN number can only contain numbers (0-9) and dashes (-)");
+            }
             selectedOption = JOptionPane.showConfirmDialog(libraryGui, dialogContents, "Add New Book", JOptionPane.OK_CANCEL_OPTION);
             if (selectedOption == JOptionPane.OK_OPTION) {
                 title = titleField.getText();
                 author = authorField.getText();
-                isbnNumber = isbnNumberField.getText();
+                isbnNumber = isbnNumberField.getText().replace("-", "");
             } else {
                 break;
             }
-        } while (title.isEmpty() && author.isEmpty() && isbnNumber.isEmpty() || isbnNumber.matches("[a-zA-Z]+"));
+        } while (title.isEmpty() || author.isEmpty() || isbnNumber.isEmpty() || isbnNumber.chars().anyMatch(Character::isLetter));
 
         if (selectedOption == JOptionPane.OK_OPTION) {
-            isbnNumber = isbnNumber.replace("-", "");
             Book newBook = new Book(title.trim(), author.trim(), Long.valueOf(isbnNumber.trim()));
             holdings.addBook(newBook);
             bookList.setListData(holdings.toArray());
@@ -375,7 +378,7 @@ public class LibraryGUI extends javax.swing.JFrame {
         String memberName = "";
         do {
             memberName = (String) JOptionPane.showInputDialog(
-                    libraryGui, "What is the new member's name?", "Add New Member",
+                    libraryGui, "Name:", "Add New Member",
                     JOptionPane.QUESTION_MESSAGE, null, null, null);
             if (memberName == null) {
                 break;
