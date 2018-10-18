@@ -353,25 +353,49 @@ public class LibraryGUI extends javax.swing.JFrame {
         String author = "";
         String isbnNumber = "";
         int selectedOption;
+        boolean titleEmpty, authorEmpty, isbnEmpty, isbnMatches;
         do {
             selectedOption = JOptionPane.showConfirmDialog(libraryGui, dialogContents, "Add New Book", JOptionPane.OK_CANCEL_OPTION);
             if (selectedOption == JOptionPane.OK_OPTION) {
                 title = titleField.getText();
                 author = authorField.getText();
-                isbnNumber = isbnNumberField.getText().replace("-", "");
+                isbnNumber = isbnNumberField.getText().replace("-", "").replace(" ", "");
             } else {
                 break;
             }
-            if (title.isEmpty()) {
-                JOptionPane.showMessageDialog(libraryGui, "Book title cannot be empty");
+            titleEmpty = title.isEmpty();
+            authorEmpty = author.isEmpty();
+            isbnEmpty = isbnNumber.isEmpty();
+            isbnMatches = isbnNumber.chars().anyMatch(Character::isLetter);
+
+            boolean showDialog = false;
+            String errorMessage = "";
+            if (titleEmpty) {
+                errorMessage += "Book title cannot be empty" + System.lineSeparator();
+                showDialog = true;
             }
-            if (author.isEmpty()) {
-                JOptionPane.showMessageDialog(libraryGui, "Book author cannot be empty");
+            if (authorEmpty) {
+                errorMessage += "Book author cannot be empty" + System.lineSeparator();
+                showDialog = true;
             }
-            if (isbnNumber.isEmpty() || isbnNumber.chars().anyMatch(Character::isLetter)) {
-                JOptionPane.showMessageDialog(libraryGui, "ISBN number cannot be empty and can only contain numbers (0-9) and dashes (-)");
+            if (isbnEmpty || isbnMatches) {
+                errorMessage += "ISBN number ";
+                if (isbnEmpty) {
+                    errorMessage += "cannot be empty";
+                }
+                if (isbnEmpty && isbnMatches) {
+                    errorMessage += " and ";
+                }
+                if (isbnMatches) {
+                    errorMessage += "can only contain numbers, hyphens and spaces";
+                }
+                showDialog = true;
             }
-        } while (title.isEmpty() || author.isEmpty() || isbnNumber.isEmpty() || isbnNumber.chars().anyMatch(Character::isLetter));
+            if (showDialog) {
+                JOptionPane.showMessageDialog(libraryGui, errorMessage);
+            }
+
+        } while (titleEmpty || authorEmpty || isbnEmpty || isbnMatches);
 
         if (selectedOption == JOptionPane.OK_OPTION) {
             Book newBook = new Book(title.trim(), author.trim(), Long.valueOf(isbnNumber.trim()));
@@ -382,6 +406,7 @@ public class LibraryGUI extends javax.swing.JFrame {
 
     private void addNewMemberActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addNewMemberActionPerformed
         String memberName = "";
+        boolean nameEmpty;
         do {
             memberName = (String) JOptionPane.showInputDialog(
                     libraryGui, "Name:", "Add New Member",
@@ -389,10 +414,11 @@ public class LibraryGUI extends javax.swing.JFrame {
             if (memberName == null) { // user has clicked cancel
                 break;
             }
-            if (memberName.isEmpty()) {
+            nameEmpty = memberName.isEmpty();
+            if (nameEmpty) {
                 JOptionPane.showMessageDialog(libraryGui, "Member name cannot be empty");
             }
-        } while (memberName.isEmpty());
+        } while (nameEmpty);
         if (memberName != null) {
             Member newMember = new Member(memberName.trim());
             theMembers.addMember(newMember);
