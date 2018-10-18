@@ -206,11 +206,11 @@ public class LibraryGUI extends javax.swing.JFrame {
         addNewBook = new javax.swing.JButton();
         addNewMember = new javax.swing.JButton();
         memberTextField = new javax.swing.JTextField();
-        availableBooksTextField = new javax.swing.JTextField();
-        loanedBooksTextField = new javax.swing.JTextField();
-        membersLabel = new javax.swing.JLabel();
-        availableBooksLabel = new javax.swing.JLabel();
-        loanedBooksLabel = new javax.swing.JLabel();
+        bookTextField = new javax.swing.JTextField();
+        loanedBookTextField = new javax.swing.JTextField();
+        memberLabel = new javax.swing.JLabel();
+        bookLabel = new javax.swing.JLabel();
+        loanedBookLabel = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -284,23 +284,23 @@ public class LibraryGUI extends javax.swing.JFrame {
             }
         });
 
-        availableBooksTextField.addActionListener(new java.awt.event.ActionListener() {
+        bookTextField.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                availableBooksTextFieldActionPerformed(evt);
+                bookTextFieldActionPerformed(evt);
             }
         });
 
-        loanedBooksTextField.addActionListener(new java.awt.event.ActionListener() {
+        loanedBookTextField.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                loanedBooksTextFieldActionPerformed(evt);
+                loanedBookTextFieldActionPerformed(evt);
             }
         });
 
-        membersLabel.setText("Members");
+        memberLabel.setText("Members");
 
-        availableBooksLabel.setText("Available Books");
+        bookLabel.setText("Available Books");
 
-        loanedBooksLabel.setText("Loaned Books");
+        loanedBookLabel.setText("Loaned Books");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -317,12 +317,12 @@ public class LibraryGUI extends javax.swing.JFrame {
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                    .addComponent(availableBooksTextField, javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(bookTextField, javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(jScrollPane2, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 121, Short.MAX_VALUE))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                                     .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 121, Short.MAX_VALUE)
-                                    .addComponent(loanedBooksTextField))
+                                    .addComponent(loanedBookTextField))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addGap(229, 229, 229))
@@ -339,11 +339,11 @@ public class LibraryGUI extends javax.swing.JFrame {
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
-                                .addComponent(membersLabel)
+                                .addComponent(memberLabel)
                                 .addGap(55, 55, 55)
-                                .addComponent(availableBooksLabel)
+                                .addComponent(bookLabel)
                                 .addGap(18, 18, 18)
-                                .addComponent(loanedBooksLabel))
+                                .addComponent(loanedBookLabel))
                             .addComponent(addNewMember))
                         .addGap(0, 0, Short.MAX_VALUE))))
         );
@@ -352,9 +352,9 @@ public class LibraryGUI extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addGap(13, 13, 13)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(membersLabel)
-                    .addComponent(availableBooksLabel)
-                    .addComponent(loanedBooksLabel))
+                    .addComponent(memberLabel)
+                    .addComponent(bookLabel)
+                    .addComponent(loanedBookLabel))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
@@ -368,8 +368,8 @@ public class LibraryGUI extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(memberTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(availableBooksTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(loanedBooksTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(bookTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(loanedBookTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(loanButton)
@@ -485,13 +485,13 @@ public class LibraryGUI extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_memberTextFieldActionPerformed
 
-    private void availableBooksTextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_availableBooksTextFieldActionPerformed
+    private void bookTextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bookTextFieldActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_availableBooksTextFieldActionPerformed
+    }//GEN-LAST:event_bookTextFieldActionPerformed
 
-    private void loanedBooksTextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loanedBooksTextFieldActionPerformed
+    private void loanedBookTextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loanedBookTextFieldActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_loanedBooksTextFieldActionPerformed
+    }//GEN-LAST:event_loanedBookTextFieldActionPerformed
 
     /**
      * @param args the command line arguments
@@ -515,20 +515,20 @@ public class LibraryGUI extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addNewBook;
     private javax.swing.JButton addNewMember;
-    private javax.swing.JLabel availableBooksLabel;
-    private javax.swing.JTextField availableBooksTextField;
+    private javax.swing.JLabel bookLabel;
     private javax.swing.JList bookList;
+    private javax.swing.JTextField bookTextField;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JButton loanButton;
+    private javax.swing.JLabel loanedBookLabel;
     private javax.swing.JList loanedBookList;
-    private javax.swing.JLabel loanedBooksLabel;
-    private javax.swing.JTextField loanedBooksTextField;
+    private javax.swing.JTextField loanedBookTextField;
+    private javax.swing.JLabel memberLabel;
     private javax.swing.JList memberList;
     private javax.swing.JTextField memberTextField;
-    private javax.swing.JLabel membersLabel;
     private javax.swing.JButton returnButton;
     // End of variables declaration//GEN-END:variables
 

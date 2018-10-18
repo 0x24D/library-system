@@ -35,13 +35,13 @@
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Group type="102" alignment="0" attributes="0">
                               <Group type="103" groupAlignment="1" max="-2" attributes="0">
-                                  <Component id="availableBooksTextField" alignment="0" max="32767" attributes="0"/>
+                                  <Component id="bookTextField" alignment="0" max="32767" attributes="0"/>
                                   <Component id="jScrollPane2" alignment="0" pref="121" max="32767" attributes="0"/>
                               </Group>
                               <EmptySpace max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="0" max="-2" attributes="0">
                                   <Component id="jScrollPane3" pref="121" max="32767" attributes="0"/>
-                                  <Component id="loanedBooksTextField" max="32767" attributes="0"/>
+                                  <Component id="loanedBookTextField" max="32767" attributes="0"/>
                               </Group>
                               <EmptySpace max="-2" attributes="0"/>
                               <Component id="jPanel1" max="32767" attributes="0"/>
@@ -66,11 +66,11 @@
                   <Group type="102" attributes="0">
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Group type="102" attributes="0">
-                              <Component id="membersLabel" min="-2" max="-2" attributes="0"/>
+                              <Component id="memberLabel" min="-2" max="-2" attributes="0"/>
                               <EmptySpace min="-2" pref="55" max="-2" attributes="0"/>
-                              <Component id="availableBooksLabel" min="-2" max="-2" attributes="0"/>
+                              <Component id="bookLabel" min="-2" max="-2" attributes="0"/>
                               <EmptySpace type="separate" max="-2" attributes="0"/>
-                              <Component id="loanedBooksLabel" min="-2" max="-2" attributes="0"/>
+                              <Component id="loanedBookLabel" min="-2" max="-2" attributes="0"/>
                           </Group>
                           <Component id="addNewMember" min="-2" max="-2" attributes="0"/>
                       </Group>
@@ -85,9 +85,9 @@
           <Group type="102" alignment="0" attributes="0">
               <EmptySpace min="-2" pref="13" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
-                  <Component id="membersLabel" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="availableBooksLabel" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="loanedBooksLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="memberLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="bookLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="loanedBookLabel" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
@@ -104,8 +104,8 @@
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="3" attributes="0">
                           <Component id="memberTextField" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="availableBooksTextField" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="loanedBooksTextField" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="bookTextField" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="loanedBookTextField" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace max="32767" attributes="0"/>
                       <Group type="103" groupAlignment="3" attributes="0">
@@ -247,27 +247,27 @@
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="memberTextFieldActionPerformed"/>
       </Events>
     </Component>
-    <Component class="javax.swing.JTextField" name="availableBooksTextField">
+    <Component class="javax.swing.JTextField" name="bookTextField">
       <Events>
-        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="availableBooksTextFieldActionPerformed"/>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="bookTextFieldActionPerformed"/>
       </Events>
     </Component>
-    <Component class="javax.swing.JTextField" name="loanedBooksTextField">
+    <Component class="javax.swing.JTextField" name="loanedBookTextField">
       <Events>
-        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="loanedBooksTextFieldActionPerformed"/>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="loanedBookTextFieldActionPerformed"/>
       </Events>
     </Component>
-    <Component class="javax.swing.JLabel" name="membersLabel">
+    <Component class="javax.swing.JLabel" name="memberLabel">
       <Properties>
         <Property name="text" type="java.lang.String" value="Members"/>
       </Properties>
     </Component>
-    <Component class="javax.swing.JLabel" name="availableBooksLabel">
+    <Component class="javax.swing.JLabel" name="bookLabel">
       <Properties>
         <Property name="text" type="java.lang.String" value="Available Books"/>
       </Properties>
     </Component>
-    <Component class="javax.swing.JLabel" name="loanedBooksLabel">
+    <Component class="javax.swing.JLabel" name="loanedBookLabel">
       <Properties>
         <Property name="text" type="java.lang.String" value="Loaned Books"/>
       </Properties>
