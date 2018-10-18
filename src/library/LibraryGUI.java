@@ -36,6 +36,7 @@ public class LibraryGUI extends javax.swing.JFrame {
     private final SetOfBooks holdings = new SetOfBooks();
     private Book selectedBook;
     private Member selectedMember;
+    private boolean buttonsEnabled = false;
 
     /**
      * The name of the file that is used for storing the contents of the library
@@ -61,16 +62,13 @@ public class LibraryGUI extends javax.swing.JFrame {
 
         memberList.addListSelectionListener((ListSelectionEvent event) -> {
             selectMember(event);
-
-            /* Where to put these? */
-            if (selectedMember != null) {
-                showCurrentLoans();
-                selectedBook = null;
-
+            showCurrentLoans();
+            if (!buttonsEnabled) {
                 bookList.setEnabled(true);
                 loanedBookList.setEnabled(true);
                 loanButton.setEnabled(true);
                 returnButton.setEnabled(true);
+                buttonsEnabled = true;
             }
         });
 
@@ -120,7 +118,6 @@ public class LibraryGUI extends javax.swing.JFrame {
                 selectedBook = holdings.findBookFromAccNumber(Integer.valueOf(selected.substring(1, selected.indexOf(")"))));
             }
         }
-
     }
 
     public void selectMember(ListSelectionEvent event) {
@@ -131,6 +128,7 @@ public class LibraryGUI extends javax.swing.JFrame {
             if (!selected.isEmpty()) {
                 selectedMember = theMembers.getMemberFromNumber(Integer.valueOf(selected.substring(1, selected.indexOf(")"))));
             }
+            selectedBook = null;
         }
     }
 
@@ -158,7 +156,7 @@ public class LibraryGUI extends javax.swing.JFrame {
             } catch (EOFException ex) {
                 // noop
             } catch (ClassNotFoundException ex) {
-                throw new RuntimeException("Cannot load library system as serialized data is not the same version as the current program version.", ex);
+                throw new RuntimeException("Cannot load library system as saved data is not the same version as the current program version.", ex);
             }
         } finally {
             if (objectIn != null) {
@@ -334,7 +332,6 @@ public class LibraryGUI extends javax.swing.JFrame {
     private void loanButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loanButtonActionPerformed
         if (selectedMember != null && selectedBook != null) {
             loanBook();
-
         }
     }//GEN-LAST:event_loanButtonActionPerformed
 
