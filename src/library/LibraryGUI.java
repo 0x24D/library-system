@@ -12,15 +12,16 @@ package library;
 
 import java.io.EOFException;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.util.regex.Matcher;
+import javax.swing.DefaultListModel;
 import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import javax.swing.event.ListSelectionEvent;
 
 /**
@@ -36,7 +37,7 @@ public class LibraryGUI extends javax.swing.JFrame {
     private final SetOfBooks holdings = new SetOfBooks();
     private Book selectedBook;
     private Member selectedMember;
-    private boolean buttonsEnabled = false;
+    private boolean controlsEnabled = false;
 
     /**
      * The name of the file that is used for storing the contents of the library
@@ -63,12 +64,14 @@ public class LibraryGUI extends javax.swing.JFrame {
         memberList.addListSelectionListener((ListSelectionEvent event) -> {
             selectMember(event);
             showCurrentLoans();
-            if (!buttonsEnabled) {
+            if (!controlsEnabled) {
                 bookList.setEnabled(true);
                 loanedBookList.setEnabled(true);
                 loanButton.setEnabled(true);
                 returnButton.setEnabled(true);
-                buttonsEnabled = true;
+                bookTextField.setEnabled(true);
+                loanedBookTextField.setEnabled(true);
+                controlsEnabled = true;
             }
         });
 
@@ -80,6 +83,11 @@ public class LibraryGUI extends javax.swing.JFrame {
             selectBook(event);
         });
 
+        memberTextField.getDocument().addDocumentListener(new DocumentListenerImpl());
+
+        bookTextField.getDocument().addDocumentListener(new DocumentListenerImpl());
+
+        loanedBookTextField.getDocument().addDocumentListener(new DocumentListenerImpl());
     }
 
     public void loanBook() {
@@ -185,6 +193,35 @@ public class LibraryGUI extends javax.swing.JFrame {
         }
     }
 
+    private void filterJList() {
+        String memberFilter = memberTextField.getText();
+        String bookFilter = bookTextField.getText();
+        String loanedBookFilter = loanedBookTextField.getText();
+
+        SetOfMembers members = new SetOfMembers(theMembers);
+        if (memberFilter != null && !memberFilter.isEmpty()) {
+            members.removeIf(m -> !m.toString().contains(memberFilter));
+        }
+        memberList.setListData(members.toArray());
+
+        SetOfBooks availableBooks = new SetOfBooks(holdings);
+        availableBooks.removeIf(b -> b.isOnLoan());
+        if (bookFilter != null && !bookFilter.isEmpty()) {
+            availableBooks.removeIf(b -> !b.toString().contains(bookFilter));
+        }
+        bookList.setListData(availableBooks.toArray());
+
+        if (selectedMember == null) {
+            loanedBookList.setListData(new SetOfBooks().toArray());
+        } else {
+            SetOfBooks loanedBooks = selectedMember.getBooksOnLoan();
+            if (loanedBookFilter != null && !loanedBookFilter.isEmpty()) {
+                loanedBooks.removeIf(b -> !b.toString().contains(loanedBookFilter));
+            }
+            loanedBookList.setListData(loanedBooks.toArray());
+        }
+    }
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -233,18 +270,10 @@ public class LibraryGUI extends javax.swing.JFrame {
             }
         });
 
-        memberList.setModel(new javax.swing.AbstractListModel() {
-            String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
-            public int getSize() { return strings.length; }
-            public Object getElementAt(int i) { return strings[i]; }
-        });
+        memberList.setModel(new DefaultListModel());
         jScrollPane1.setViewportView(memberList);
 
-        bookList.setModel(new javax.swing.AbstractListModel() {
-            String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
-            public int getSize() { return strings.length; }
-            public Object getElementAt(int i) { return strings[i]; }
-        });
+        bookList.setModel(new DefaultListModel());
         bookList.setEnabled(false);
         jScrollPane2.setViewportView(bookList);
 
@@ -256,11 +285,7 @@ public class LibraryGUI extends javax.swing.JFrame {
             }
         });
 
-        loanedBookList.setModel(new javax.swing.AbstractListModel() {
-            String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
-            public int getSize() { return strings.length; }
-            public Object getElementAt(int i) { return strings[i]; }
-        });
+        loanedBookList.setModel(new DefaultListModel());
         loanedBookList.setEnabled(false);
         jScrollPane3.setViewportView(loanedBookList);
 
@@ -278,23 +303,9 @@ public class LibraryGUI extends javax.swing.JFrame {
             }
         });
 
-        memberTextField.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                memberTextFieldActionPerformed(evt);
-            }
-        });
+        bookTextField.setEnabled(false);
 
-        bookTextField.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                bookTextFieldActionPerformed(evt);
-            }
-        });
-
-        loanedBookTextField.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                loanedBookTextFieldActionPerformed(evt);
-            }
-        });
+        loanedBookTextField.setEnabled(false);
 
         memberLabel.setText("Members");
 
@@ -481,18 +492,6 @@ public class LibraryGUI extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_addNewMemberActionPerformed
 
-    private void memberTextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_memberTextFieldActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_memberTextFieldActionPerformed
-
-    private void bookTextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bookTextFieldActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_bookTextFieldActionPerformed
-
-    private void loanedBookTextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loanedBookTextFieldActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_loanedBookTextFieldActionPerformed
-
     /**
      * @param args the command line arguments
      */
@@ -509,7 +508,6 @@ public class LibraryGUI extends javax.swing.JFrame {
             }));
 
         });
-
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -532,4 +530,22 @@ public class LibraryGUI extends javax.swing.JFrame {
     private javax.swing.JButton returnButton;
     // End of variables declaration//GEN-END:variables
 
+    public class DocumentListenerImpl implements DocumentListener {
+
+        @Override
+        public void insertUpdate(DocumentEvent de) {
+            filterJList();
+        }
+
+        @Override
+        public void removeUpdate(DocumentEvent de) {
+            filterJList();
+        }
+
+        @Override
+        public void changedUpdate(DocumentEvent de) {
+            filterJList();
+        }
+
+    }
 }

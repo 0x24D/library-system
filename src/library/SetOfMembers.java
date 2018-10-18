@@ -14,6 +14,14 @@ import java.util.ArrayList;
  */
 public class SetOfMembers extends ArrayList<Member> {
 
+    public SetOfMembers() {
+        super();
+    }
+
+    public SetOfMembers(SetOfMembers members) {
+        super(members);
+    }
+
     public void addMember(Member aMember) {
         super.add(aMember);
     }
