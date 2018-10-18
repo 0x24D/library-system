@@ -350,21 +350,11 @@ public class LibraryGUI extends javax.swing.JFrame {
         String author = "";
         String isbnNumber = "";
         int selectedOption;
-        boolean titleEmpty, authorEmpty, isbnEmpty, isbnMatches;
+        boolean titleEmpty = false;
+        boolean authorEmpty = false;
+        boolean isbnEmpty = false;
+        boolean isbnMatches = false;
         do {
-            selectedOption = JOptionPane.showConfirmDialog(libraryGui, dialogContents, "Add New Book", JOptionPane.OK_CANCEL_OPTION);
-            if (selectedOption == JOptionPane.OK_OPTION) {
-                title = titleField.getText();
-                author = authorField.getText();
-                isbnNumber = isbnNumberField.getText().replace("-", "").replace(" ", "");
-            } else {
-                break;
-            }
-            titleEmpty = title.isEmpty();
-            authorEmpty = author.isEmpty();
-            isbnEmpty = isbnNumber.isEmpty();
-            isbnMatches = isbnNumber.chars().anyMatch(Character::isLetter);
-
             boolean showDialog = false;
             String errorMessage = "";
             if (titleEmpty) {
@@ -392,6 +382,19 @@ public class LibraryGUI extends javax.swing.JFrame {
                 JOptionPane.showMessageDialog(libraryGui, errorMessage);
             }
 
+            selectedOption = JOptionPane.showConfirmDialog(libraryGui, dialogContents, "Add New Book", JOptionPane.OK_CANCEL_OPTION);
+            if (selectedOption == JOptionPane.OK_OPTION) {
+                title = titleField.getText();
+                author = authorField.getText();
+                isbnNumber = isbnNumberField.getText().replace("-", "").replace(" ", "");
+            } else {
+                break;
+            }
+
+            titleEmpty = title.isEmpty();
+            authorEmpty = author.isEmpty();
+            isbnEmpty = isbnNumber.isEmpty();
+            isbnMatches = isbnNumber.chars().anyMatch(Character::isLetter);
         } while (titleEmpty || authorEmpty || isbnEmpty || isbnMatches);
 
         if (selectedOption == JOptionPane.OK_OPTION) {
@@ -403,8 +406,11 @@ public class LibraryGUI extends javax.swing.JFrame {
 
     private void addNewMemberActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addNewMemberActionPerformed
         String memberName = "";
-        boolean nameEmpty;
+        boolean nameEmpty = false;
         do {
+            if (nameEmpty) {
+                JOptionPane.showMessageDialog(libraryGui, "Member name cannot be empty");
+            }
             memberName = (String) JOptionPane.showInputDialog(
                     libraryGui, "Name:", "Add New Member",
                     JOptionPane.QUESTION_MESSAGE, null, null, null);
@@ -412,9 +418,6 @@ public class LibraryGUI extends javax.swing.JFrame {
                 break;
             }
             nameEmpty = memberName.isEmpty();
-            if (nameEmpty) {
-                JOptionPane.showMessageDialog(libraryGui, "Member name cannot be empty");
-            }
         } while (nameEmpty);
         if (memberName != null) {
             Member newMember = new Member(memberName.trim());
