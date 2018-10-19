@@ -1,13 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
- /*
- * LibraryGUI.java
- *
- * Created on 28-Sep-2009, 11:55:39
- */
 package library;
 
 import java.io.EOFException;
