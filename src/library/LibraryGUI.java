@@ -76,11 +76,11 @@ public class LibraryGUI extends javax.swing.JFrame {
             selectBook(event);
         });
 
-//        memberTextField.getDocument().addDocumentListener(new DocumentListenerImpl());
-//
-//        bookTextField.getDocument().addDocumentListener(new DocumentListenerImpl());
-//
-//        loanedBookTextField.getDocument().addDocumentListener(new DocumentListenerImpl());
+        memberTextField.getDocument().addDocumentListener(new MemberDocumentListenerImpl());
+
+        bookTextField.getDocument().addDocumentListener(new BookDocumentListenerImpl());
+
+        loanedBookTextField.getDocument().addDocumentListener(new BookDocumentListenerImpl());
     }
 
     public void loanBook() {
@@ -96,13 +96,24 @@ public class LibraryGUI extends javax.swing.JFrame {
     }
 
     private void showCurrentLoans() {
+        String bookFilter = bookTextField.getText();
+        String loanedBookFilter = loanedBookTextField.getText();
+
         SetOfBooks availableBooks = new SetOfBooks(holdings);
         availableBooks.removeIf(b -> b.isOnLoan());
+        if (bookFilter != null && !bookFilter.isEmpty()) {
+            availableBooks.removeIf(b -> !b.toString().toLowerCase().contains(bookFilter) && !b.toString().contains(bookFilter));
+        }
         bookList.setListData(availableBooks.toArray());
+
         if (selectedMember == null) {
             loanedBookList.setListData(new SetOfBooks().toArray());
         } else {
-            loanedBookList.setListData(selectedMember.getBooksOnLoan().toArray());
+            SetOfBooks loanedBooks = new SetOfBooks(selectedMember.getBooksOnLoan());
+            if (loanedBookFilter != null && !loanedBookFilter.isEmpty()) {
+                loanedBooks.removeIf(b -> !b.toString().toLowerCase().contains(loanedBookFilter) && !b.toString().contains(loanedBookFilter));
+            }
+            loanedBookList.setListData(loanedBooks.toArray());
         }
     }
 
@@ -182,33 +193,13 @@ public class LibraryGUI extends javax.swing.JFrame {
         }
     }
 
-    private void filterJList() {
+    private void filterMembers() {
         String memberFilter = memberTextField.getText();
-        String bookFilter = bookTextField.getText();
-        String loanedBookFilter = loanedBookTextField.getText();
-
         SetOfMembers members = new SetOfMembers(theMembers);
         if (memberFilter != null && !memberFilter.isEmpty()) {
             members.removeIf(m -> !m.toString().toLowerCase().contains(memberFilter) && !m.toString().contains(memberFilter));
         }
         memberList.setListData(members.toArray());
-
-        SetOfBooks availableBooks = new SetOfBooks(holdings);
-        availableBooks.removeIf(b -> b.isOnLoan());
-        if (bookFilter != null && !bookFilter.isEmpty()) {
-            availableBooks.removeIf(b -> !b.toString().toLowerCase().contains(bookFilter) && !b.toString().contains(bookFilter));
-        }
-        bookList.setListData(availableBooks.toArray());
-
-        if (selectedMember == null) {
-            loanedBookList.setListData(new SetOfBooks().toArray());
-        } else {
-            SetOfBooks loanedBooks = selectedMember.getBooksOnLoan();
-            if (loanedBookFilter != null && !loanedBookFilter.isEmpty()) {
-                loanedBooks.removeIf(b -> !b.toString().toLowerCase().contains(loanedBookFilter) && !b.toString().contains(loanedBookFilter));
-            }
-            loanedBookList.setListData(loanedBooks.toArray());
-        }
     }
 
     /**
@@ -497,21 +488,40 @@ public class LibraryGUI extends javax.swing.JFrame {
     private javax.swing.JButton returnButton;
     // End of variables declaration//GEN-END:variables
 
-    public class DocumentListenerImpl implements DocumentListener {
+    public class MemberDocumentListenerImpl implements DocumentListener {
 
         @Override
         public void insertUpdate(DocumentEvent de) {
-            filterJList();
+            filterMembers();
         }
 
         @Override
         public void removeUpdate(DocumentEvent de) {
-            filterJList();
+            filterMembers();
         }
 
         @Override
         public void changedUpdate(DocumentEvent de) {
-            filterJList();
+            filterMembers();
+        }
+
+    }
+
+    public class BookDocumentListenerImpl implements DocumentListener {
+
+        @Override
+        public void insertUpdate(DocumentEvent de) {
+            showCurrentLoans();
+        }
+
+        @Override
+        public void removeUpdate(DocumentEvent de) {
+            showCurrentLoans();
+        }
+
+        @Override
+        public void changedUpdate(DocumentEvent de) {
+            showCurrentLoans();
         }
 
     }
