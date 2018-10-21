@@ -76,11 +76,11 @@ public class LibraryGUI extends javax.swing.JFrame {
             selectBook(event);
         });
 
-        memberTextField.getDocument().addDocumentListener(new DocumentListenerImpl());
-
-        bookTextField.getDocument().addDocumentListener(new DocumentListenerImpl());
-
-        loanedBookTextField.getDocument().addDocumentListener(new DocumentListenerImpl());
+//        memberTextField.getDocument().addDocumentListener(new DocumentListenerImpl());
+//
+//        bookTextField.getDocument().addDocumentListener(new DocumentListenerImpl());
+//
+//        loanedBookTextField.getDocument().addDocumentListener(new DocumentListenerImpl());
     }
 
     public void loanBook() {
@@ -434,7 +434,7 @@ public class LibraryGUI extends javax.swing.JFrame {
         if (selectedOption == JOptionPane.OK_OPTION) {
             Book newBook = new Book(title.trim(), author.trim(), Long.valueOf(isbnNumber.trim()));
             holdings.addBook(newBook);
-            bookList.setListData(holdings.toArray());
+            showCurrentLoans();
         }
     }//GEN-LAST:event_addNewBookActionPerformed
 
