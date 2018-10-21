@@ -84,19 +84,15 @@ public class LibraryGUI extends javax.swing.JFrame {
     }
 
     public void loanBook() {
-        if (loanedBookList.getModel().getSize() < 3 && selectedBook != null && !selectedBook.isOnLoan()) {
-            selectedMember.borrowBook(selectedBook);
-            showCurrentLoans();
-            selectedBook = null;
-        }
+        selectedMember.borrowBook(selectedBook);
+        showCurrentLoans();
+        selectedBook = null;
     }
 
     public void acceptReturn() {
-        if (selectedBook != null) {
-            selectedMember.returnBook(selectedBook);
-            showCurrentLoans();
-            selectedBook = null;
-        }
+        selectedMember.returnBook(selectedBook);
+        showCurrentLoans();
+        selectedBook = null;
     }
 
     private void showCurrentLoans() {
@@ -368,7 +364,7 @@ public class LibraryGUI extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void loanButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loanButtonActionPerformed
-        if (selectedMember != null && selectedBook != null && !selectedBook.isOnLoan()) {
+        if (selectedMember != null && selectedMember.getBooksOnLoan().size() < 3 && selectedBook != null && !selectedBook.isOnLoan()) {
             loanBook();
         }
     }//GEN-LAST:event_loanButtonActionPerformed
